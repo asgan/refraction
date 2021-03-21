@@ -3,14 +3,14 @@ defmodule Refraction.Neuron do
   alias Refraction.Neuron.{Activation, Connection}
 
   @type t :: %__MODULE__{
-    pid:      pid(),
-    input:    integer,
-    output:   integer | float,
-    incoming: [integer],
-    outgoing: [integer | float],
-    bias?:    boolean,
-    delta:    float
-  }
+          pid: pid(),
+          input: integer,
+          output: integer | float,
+          incoming: [integer],
+          outgoing: [integer | float],
+          bias?: boolean,
+          delta: float
+        }
   defstruct pid: nil,
             input: 0,
             output: 0,
@@ -26,7 +26,7 @@ defmodule Refraction.Neuron do
     {:ok, pid}
   end
 
-  @spec get(pid()) :: Neuron.t
+  @spec get(pid()) :: Neuron.t()
   def get(pid), do: Agent.get(pid, fn neuron -> neuron end)
 
   @spec learning_rate() :: float
@@ -34,16 +34,24 @@ defmodule Refraction.Neuron do
 
   @spec update(pid(), map()) :: :ok
   def update(pid, new_attributes) do
-    Agent.update(pid, fn current_attributes -> Map.merge(current_attributes, new_attributes) end)
+    Agent.update(pid, fn current_attributes ->
+      Map.merge(current_attributes, new_attributes)
+    end)
   end
 
   @spec connect(pid(), pid()) :: :ok
   def connect(source_neuron_pid, target_neuron_pid) do
-    {:ok, connection_pid} = Connection.connection_for(source_neuron_pid, target_neuron_pid)
-    update(source_neuron_pid, %{outgoing: get(source_neuron_pid).outgoing ++ [connection_pid]})
-    update(target_neuron_pid, %{incoming: get(target_neuron_pid).incoming ++ [connection_pid]})
-  end
+    {:ok, connection_pid} =
+      Connection.connection_for(source_neuron_pid, target_neuron_pid)
 
+    update(source_neuron_pid, %{
+      outgoing: get(source_neuron_pid).outgoing ++ [connection_pid]
+    })
+
+    update(target_neuron_pid, %{
+      incoming: get(target_neuron_pid).incoming ++ [connection_pid]
+    })
+  end
 
   @spec activate(pid(), atom, integer | nil) :: :ok
   def activate(neuron_pid, activation, value \\ nil) do

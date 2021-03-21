@@ -2,11 +2,11 @@ defmodule Refraction.Neuron.Connection do
   alias Refraction.Neuron.Connection
 
   @type t :: %__MODULE__{
-    pid:        pid(),
-    source_pid: pid(),
-    target_pid: pid(),
-    weight:     float
-  }
+          pid: pid(),
+          source_pid: pid(),
+          target_pid: pid(),
+          weight: float
+        }
   defstruct pid: nil,
             source_pid: nil,
             target_pid: nil,
@@ -19,12 +19,14 @@ defmodule Refraction.Neuron.Connection do
     {:ok, pid}
   end
 
-  @spec get(pid()) :: Connection.t
+  @spec get(pid()) :: Connection.t()
   def get(pid), do: Agent.get(pid, fn connection -> connection end)
 
   @spec update(pid(), map()) :: :ok
   def update(pid, new_attributes) do
-    Agent.update(pid, fn current_attributes -> Map.merge(current_attributes, new_attributes) end)
+    Agent.update(pid, fn current_attributes ->
+      Map.merge(current_attributes, new_attributes)
+    end)
   end
 
   @spec connection_for(pid(), pid()) :: {:ok, pid()}

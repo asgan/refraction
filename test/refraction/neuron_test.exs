@@ -43,7 +43,14 @@ defmodule Refraction.NeuronTest do
   test "update neuron values" do
     {:ok, pid} = Neuron.start_link()
 
-    Neuron.update(pid, %{input: 1, output: 2, incoming: [1], outgoing: [2], bias?: true, delta: 1})
+    Neuron.update(pid, %{
+      input: 1,
+      output: 2,
+      incoming: [1],
+      outgoing: [2],
+      bias?: true,
+      delta: 1
+    })
 
     neuron = Neuron.get(pid)
     assert neuron.input == 1
@@ -91,7 +98,9 @@ defmodule Refraction.NeuronTest do
     {:ok, connection_one_pid} = Connection.start_link(%{source_pid: pid_x})
     {:ok, connection_two_pid} = Connection.start_link(%{source_pid: pid_y})
 
-    {:ok, pid_a} = Neuron.start_link(%{incoming: [connection_one_pid, connection_two_pid]})
+    {:ok, pid_a} =
+      Neuron.start_link(%{incoming: [connection_one_pid, connection_two_pid]})
+
     pid_a |> Neuron.activate(:sigmoid)
     assert Neuron.get(pid_a).output == 0.9354748988294719
   end

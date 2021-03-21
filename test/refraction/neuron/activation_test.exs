@@ -13,7 +13,11 @@ defmodule Refraction.Neuron.ActivationTest do
   end
 
   test ".activation_function softargmax" do
-    assert Activation.calculate_output(:softargmax, [1, 2, 3]) == [0.09003057317038046, 0.24472847105479764, 0.6652409557748218]
+    assert Activation.calculate_output(:softargmax, [1, 2, 3]) == [
+             0.09003057317038046,
+             0.24472847105479764,
+             0.6652409557748218
+           ]
   end
 
   test ".activation_function identity" do

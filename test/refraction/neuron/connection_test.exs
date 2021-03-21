@@ -15,7 +15,10 @@ defmodule Refraction.Neuron.ConnectionTest do
   test "create new connection with custom values" do
     {:ok, pid_a} = Neuron.start_link()
     {:ok, pid_b} = Neuron.start_link()
-    {:ok, connection_pid} = Connection.start_link(%{source_pid: pid_a, target_pid: pid_b})
+
+    {:ok, connection_pid} =
+      Connection.start_link(%{source_pid: pid_a, target_pid: pid_b})
+
     connection = Connection.get(connection_pid)
 
     assert connection.source_pid == pid_a
